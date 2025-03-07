@@ -33,16 +33,16 @@ const Datas = () => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      const filteredData = originalData.filter(
-        (item) =>
-          item.name.includes(search) ||
-          item.email.includes(search) ||
-          item.id.includes
-      );
+    // if (e.key === "Enter") {
+    const filteredData = originalData.filter(
+      (item) =>
+        item.name.includes(search) ||
+        item.email.includes(search) ||
+        item.id.includes
+    );
 
-      setJsonData(filteredData);
-    }
+    setJsonData(filteredData);
+    // }
   };
 
   const handleEdit = (id) => {
@@ -69,18 +69,26 @@ const Datas = () => {
   };
 
   const handleOkay = () => {
-    let updatedData = jsonData.map((ele) => {
-      if (ele.id === editData.id) {
-        return { ...ele, name: editData.name, email: editData.email };
-      } else {
-        return ele;
-      }
-    });
+    let findedData = jsonData.find(
+      (ele) => editData.email === ele.email && editData.id !== ele.id
+    );
 
-    setJsonData(updatedData);
-    localStorage.setItem("jsonData", JSON.stringify(updatedData));
-    setEditMode({ flag: false, id: undefined });
-    setEditData({});
+    if (findedData) {
+      alert("With this email already exists");
+    } else {
+      let updatedData = jsonData.map((ele) => {
+        if (ele.id === editData.id) {
+          return { ...ele, name: editData.name, email: editData.email };
+        } else {
+          return ele;
+        }
+      });
+
+      setJsonData(updatedData);
+      localStorage.setItem("jsonData", JSON.stringify(updatedData));
+      setEditMode({ flag: false, id: undefined });
+      setEditData({});
+    }
   };
 
   const downloadJsonFile = () => {
@@ -108,7 +116,7 @@ const Datas = () => {
             placeholder="Search"
             value={search}
             onChange={handleSearch}
-            onKeyPress={handleKeyPress}
+            onKeyUp={handleKeyPress}
           />
         </div>
         <div>
